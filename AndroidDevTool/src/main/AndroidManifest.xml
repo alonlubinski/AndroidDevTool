@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.alon.androiddevtool">
+
+    <application android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <activity android:name=".AndroidDevToolActivity">
+            <intent-filter>
+                <action android:name="com.alon.androiddevtool" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
