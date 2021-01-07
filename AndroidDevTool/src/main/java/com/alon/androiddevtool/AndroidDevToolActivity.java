@@ -16,6 +16,9 @@ import android.view.MenuItem;
 import android.view.View;
 
 
+import com.alon.androiddevtool.fragments.DatabaseFragment;
+import com.alon.androiddevtool.fragments.HomeFragment;
+import com.alon.androiddevtool.fragments.SharedPreferencesFragment;
 import com.google.android.material.navigation.NavigationView;
 
 public class AndroidDevToolActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -38,6 +41,7 @@ public class AndroidDevToolActivity extends AppCompatActivity implements Navigat
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setupDrawerContent(navigationView);
         navigationView.setNavigationItemSelectedListener(this);
+        getSupportFragmentManager().beginTransaction().add(R.id.main_FL, new HomeFragment()).commit();
         sharedPreferences = getApplicationContext().getSharedPreferences("sp", Context.MODE_PRIVATE);
     }
 
@@ -77,12 +81,17 @@ public class AndroidDevToolActivity extends AppCompatActivity implements Navigat
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.menu_home){
             Log.d("pttt", "Home");
+            fragment = new HomeFragment();
         } else if (item.getItemId() == R.id.menu_sp){
             String value = sharedPreferences.getString("key", "empty");
             Log.d("pttt", value);
+            fragment = new SharedPreferencesFragment(getApplicationContext());
+        } else if (item.getItemId() == R.id.menu_db){
+            Log.d("pttt", "Database");
+            fragment = new DatabaseFragment();
         }
         if(fragment != null){
-            //changeFragment(fragment, item);
+            changeFragment(fragment, item);
         }
         return false;
     }

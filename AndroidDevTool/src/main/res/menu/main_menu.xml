@@ -11,5 +11,9 @@
             android:id="@+id/menu_sp"
             android:title="@string/menu_sp"/>
 
+        <item
+            android:id="@+id/menu_db"
+            android:title="@string/menu_db"/>
+
     </group>
 </menu>
