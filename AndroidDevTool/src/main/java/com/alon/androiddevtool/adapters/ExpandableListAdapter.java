@@ -13,14 +13,15 @@ import com.alon.androiddevtool.R;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     private Context context;
     private List<String> listDataHeader;
-    private HashMap<String, List<String>> listHashMap;
+    private HashMap<String, Map<String, ?>> listHashMap;
 
-    public ExpandableListAdapter(Context context, List<String> listDataHeader, HashMap<String, List<String>> listHashMap) {
+    public ExpandableListAdapter(Context context, List<String> listDataHeader, HashMap<String, Map<String, ?>> listHashMap) {
         this.context = context;
         this.listDataHeader = listDataHeader;
         this.listHashMap = listHashMap;
@@ -43,7 +44,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        return listHashMap.get(listDataHeader.get(groupPosition)).get(childPosition);
+        return listHashMap.get(listDataHeader.get(groupPosition));
     }
 
     @Override
@@ -76,12 +77,17 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        final String childText = (String)getChild(groupPosition, childPosition);
+        final Map<String, ?> map = (Map<String, ?> )getChild(groupPosition, childPosition);
+        Object[] keys = map.keySet().toArray();
         if(convertView == null){
             LayoutInflater inflater = (LayoutInflater)this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.list_header, null);
+            convertView = inflater.inflate(R.layout.list_item, null);
         }
-
+        TextView list_LBL_key = (TextView)convertView.findViewById(R.id.list_LBL_key);
+        TextView list_LBL_value = (TextView)convertView.findViewById(R.id.list_LBL_value);
+        list_LBL_key.setTypeface(null, Typeface.BOLD);
+        list_LBL_key.setText(keys[childPosition].toString());
+        list_LBL_value.setText(map.get(keys[childPosition].toString()).toString());
         return convertView;
     }
 
@@ -89,4 +95,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
     }
+
+
 }
