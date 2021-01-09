@@ -49,7 +49,7 @@ public class SharedPreferencesFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_shared_preferences, container, false);
         findAll(view);
         initData();
-        expandableListAdapter = new ExpandableListAdapter(context, listDataHeader, listHash);
+        expandableListAdapter = new ExpandableListAdapter(context, getContext(), listDataHeader, listHash);
         sp_ELV.setAdapter(expandableListAdapter);
         return view;
     }

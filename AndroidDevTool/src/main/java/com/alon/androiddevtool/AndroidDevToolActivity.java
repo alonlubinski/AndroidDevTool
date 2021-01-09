@@ -29,6 +29,7 @@ public class AndroidDevToolActivity extends AppCompatActivity implements Navigat
     private Toolbar toolbar;
     private Fragment fragment = null;
     private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +44,10 @@ public class AndroidDevToolActivity extends AppCompatActivity implements Navigat
         navigationView.setNavigationItemSelectedListener(this);
         getSupportFragmentManager().beginTransaction().add(R.id.main_FL, new HomeFragment()).commit();
         sharedPreferences = getApplicationContext().getSharedPreferences("sp", Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+        editor.putString("value", "key");
+        editor.putInt("num", 99);
+        editor.apply();
     }
 
     // Find all views by id.
