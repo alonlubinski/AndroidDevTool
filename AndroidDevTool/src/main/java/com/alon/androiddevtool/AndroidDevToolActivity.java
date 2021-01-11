@@ -47,6 +47,8 @@ public class AndroidDevToolActivity extends AppCompatActivity implements Navigat
         editor = sharedPreferences.edit();
         editor.putString("value", "key");
         editor.putInt("num", 99);
+        editor.putBoolean("bool", false);
+        editor.putFloat("float", 1001231231);
         editor.apply();
     }
 

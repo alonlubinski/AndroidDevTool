@@ -48,13 +48,12 @@ public class SharedPreferencesFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_shared_preferences, container, false);
         findAll(view);
-        initData();
-        expandableListAdapter = new ExpandableListAdapter(context, getContext(), listDataHeader, listHash);
-        sp_ELV.setAdapter(expandableListAdapter);
+
+
         return view;
     }
 
-    // Method that find all the views by id.
+    // Function that finds all the views by id.
     private void findAll(View view){
         sp_ELV = view.findViewById(R.id.sp_ELV);
     }
@@ -78,6 +77,16 @@ public class SharedPreferencesFragment extends Fragment {
                 listHash.put(list[i], map);
             }
         }
+        expandableListAdapter = new ExpandableListAdapter(context, getContext(), listDataHeader, listHash);
+        sp_ELV.setAdapter(expandableListAdapter);
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(sp_ELV != null){
+            sp_ELV.removeAllViewsInLayout();
+        }
+        initData();
     }
 }
