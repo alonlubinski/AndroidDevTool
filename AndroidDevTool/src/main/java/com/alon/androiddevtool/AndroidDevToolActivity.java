@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.ArraySet;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +21,9 @@ import com.alon.androiddevtool.fragments.DatabaseFragment;
 import com.alon.androiddevtool.fragments.HomeFragment;
 import com.alon.androiddevtool.fragments.SharedPreferencesFragment;
 import com.google.android.material.navigation.NavigationView;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class AndroidDevToolActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -49,6 +53,12 @@ public class AndroidDevToolActivity extends AppCompatActivity implements Navigat
         editor.putInt("num", 99);
         editor.putBoolean("bool", false);
         editor.putFloat("float", 1001231231);
+        Set<String> set = new ArraySet<>();
+        set.add("sdf");
+        set.add("sdfsfdsdf");
+        set.add("12312");
+        set.add("sdf");
+        editor.putStringSet("set", set);
         editor.apply();
     }
 

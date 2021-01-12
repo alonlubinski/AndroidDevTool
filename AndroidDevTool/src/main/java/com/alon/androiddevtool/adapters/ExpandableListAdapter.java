@@ -131,6 +131,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     private void showConfirmationDialog(String headerTitle){
         AlertDialog.Builder builder = new AlertDialog.Builder(fragmentContext);
+        builder.setTitle("Delete");
         builder.setMessage("Are you sure you want to delete " + headerTitle + "?");
         builder.setCancelable(true);
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
