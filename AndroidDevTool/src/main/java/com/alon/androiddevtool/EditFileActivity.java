@@ -19,8 +19,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alon.androiddevtool.adapters.EditAdapter;
+import com.alon.androiddevtool.converters.MapConverter;
+import com.alon.androiddevtool.models.SharedPreferencesField;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,10 +36,13 @@ public class EditFileActivity extends AppCompatActivity implements View.OnClickL
     private ImageButton edit_BTN_add;
     private Button edit_BTN_confirm, edit_BTN_cancel;
     private RecyclerView edit_RCV;
-    private RecyclerView.Adapter editAdapter;
+    private EditAdapter editAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private String fileName;
     private Map<String, ?> fileContent = new HashMap<>();
+    private ArrayList<SharedPreferencesField> spData = new ArrayList<>();
+    private ArrayList<EditAdapter.MyViewHolder> viewHolderArrayList;
+    private MapConverter mapConverter = new MapConverter();
     private Handler handler = new Handler();
     private int selectedType;
 
@@ -81,6 +87,8 @@ public class EditFileActivity extends AppCompatActivity implements View.OnClickL
                     String sp_name = list[i].substring(0, list[i].length() - 4);
                     SharedPreferences sp = getApplicationContext().getSharedPreferences(sp_name, Context.MODE_PRIVATE);
                     fileContent = sp.getAll();
+                    spData = mapConverter.fromMap(fileContent);
+                    return;
                 }
             }
         }
@@ -91,32 +99,33 @@ public class EditFileActivity extends AppCompatActivity implements View.OnClickL
         edit_RCV.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         edit_RCV.setLayoutManager(layoutManager);
-        editAdapter = new EditAdapter(fileContent);
+        editAdapter = new EditAdapter(spData);
         edit_RCV.setAdapter(editAdapter);
     }
 
     // Function that validates the edit shared preferences form.
     private boolean validateForm() {
         boolean flag = true;
-        for (int i = 0; i < editAdapter.getItemCount(); i++) {
-            View view = edit_RCV.findViewHolderForAdapterPosition(i).itemView;
-            String key = ((EditText) view.findViewById(R.id.edit_EDT_key)).getText().toString().trim();
-            String value = ((EditText) view.findViewById(R.id.edit_EDT_value)).getText().toString().trim();
-            String type = ((TextView) view.findViewById(R.id.edit_LBL_type)).getText().toString();
+        viewHolderArrayList = editAdapter.getViewHolderArrayList();
+        for (int i = 0; i < viewHolderArrayList.size(); i++) {
+            Log.d("pttt", "CHECK - " + Integer.valueOf(i).toString());
+            String key = ((EditText)viewHolderArrayList.get(i).itemView.findViewById(R.id.edit_EDT_key)).getText().toString().trim();
+            String value = ((EditText)viewHolderArrayList.get(i).itemView.findViewById(R.id.edit_EDT_value)).getText().toString().trim();
+            String type = ((TextView)viewHolderArrayList.get(i).itemView.findViewById(R.id.edit_LBL_type)).getText().toString();
             if (key.equals("")) {
-                ((EditText) view.findViewById(R.id.edit_EDT_key)).setError("Empty field");
+                ((EditText)viewHolderArrayList.get(i).itemView.findViewById(R.id.edit_EDT_key)).setError("Empty field");
                 flag = false;
             }
             if (value.equals("")) {
-                ((EditText) view.findViewById(R.id.edit_EDT_value)).setError("Empty field");
+                ((EditText)viewHolderArrayList.get(i).itemView.findViewById(R.id.edit_EDT_value)).setError("Empty field");
                 flag = false;
             } else if (!checkValueType(value, type)) {
                 if (type.equals("Boolean")) {
-                    ((EditText) view.findViewById(R.id.edit_EDT_value)).setError("Fill true or false (with lowercase)");
+                    ((EditText)viewHolderArrayList.get(i).itemView.findViewById(R.id.edit_EDT_value)).setError("Fill true or false (with lowercase)");
                 } else if (type.equals("HashSet")) {
-                    ((EditText) view.findViewById(R.id.edit_EDT_value)).setError("HashSet must be surrounded by square brackets");
+                    ((EditText)viewHolderArrayList.get(i).itemView.findViewById(R.id.edit_EDT_value)).setError("HashSet must be surrounded by square brackets");
                 } else {
-                    ((EditText) view.findViewById(R.id.edit_EDT_value)).setError("Wrong type");
+                    ((EditText)viewHolderArrayList.get(i).itemView.findViewById(R.id.edit_EDT_value)).setError("Wrong type");
                 }
                 flag = false;
             }
@@ -157,11 +166,11 @@ public class EditFileActivity extends AppCompatActivity implements View.OnClickL
         SharedPreferences sp = getApplicationContext().getSharedPreferences(sp_name, MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.clear();
-        for (int i = 0; i < editAdapter.getItemCount(); i++) {
-            View view = edit_RCV.findViewHolderForAdapterPosition(i).itemView;
-            String key = ((EditText) view.findViewById(R.id.edit_EDT_key)).getText().toString().trim();
-            String value = ((EditText) view.findViewById(R.id.edit_EDT_value)).getText().toString().trim();
-            String type = ((TextView) view.findViewById(R.id.edit_LBL_type)).getText().toString();
+        for (int i = 0; i < viewHolderArrayList.size(); i++) {
+            Log.d("pttt", "SAVE - " + Integer.valueOf(i).toString());
+            String key = ((EditText)viewHolderArrayList.get(i).itemView.findViewById(R.id.edit_EDT_key)).getText().toString().trim();
+            String value = ((EditText)viewHolderArrayList.get(i).itemView.findViewById(R.id.edit_EDT_value)).getText().toString().trim();
+            String type = ((TextView)viewHolderArrayList.get(i).itemView.findViewById(R.id.edit_LBL_type)).getText().toString();
             try {
                 if (type.equals("String")) {
                     editor.putString(key, value);
@@ -242,8 +251,8 @@ public class EditFileActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String type = Arrays.asList(typesArray).get(selectedType);
-
-
+                spData.add(new SharedPreferencesField("", "", type));
+                editAdapter.notifyItemInserted(editAdapter.getItemCount());
             }
         });
         AlertDialog alertDialog = builder.create();

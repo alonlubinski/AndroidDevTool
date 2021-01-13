@@ -1,5 +1,7 @@
 package com.alon.androiddevtool.adapters;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,17 +14,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alon.androiddevtool.R;
+import com.alon.androiddevtool.models.SharedPreferencesField;
 
 import java.util.ArrayList;
 import java.util.Map;
 
 public class EditAdapter extends RecyclerView.Adapter<EditAdapter.MyViewHolder> {
 
-    private Map<String, ?> dataSet;
-    private ArrayList<String> keys = new ArrayList<>();
-    private ArrayList<Object> values = new ArrayList<>();
+    private ArrayList<SharedPreferencesField> dataSet;
+    private ArrayList<EditAdapter.MyViewHolder> data;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
+        private String key, value, type;
         private EditText edit_EDT_key, edit_EDT_value;
         private TextView edit_LBL_type;
         private ImageButton edit_BTN_delete;
@@ -35,12 +38,9 @@ public class EditAdapter extends RecyclerView.Adapter<EditAdapter.MyViewHolder> 
         }
     }
 
-    public EditAdapter(Map<String, ?> fileContent){
-        this.dataSet = fileContent;
-        for(Map.Entry<String, ?> entry : dataSet.entrySet()){
-            keys.add(entry.getKey());
-            values.add(entry.getValue());
-        }
+    public EditAdapter(ArrayList<SharedPreferencesField> dataSet){
+        this.dataSet = dataSet;
+        data = new ArrayList<>();
     }
 
     @NonNull
@@ -49,26 +49,60 @@ public class EditAdapter extends RecyclerView.Adapter<EditAdapter.MyViewHolder> 
         // create a new view
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycle_item, parent, false);
         EditAdapter.MyViewHolder vh = new EditAdapter.MyViewHolder(view);
+        data.add(vh);
         return vh;
     }
 
     @Override
     public void onBindViewHolder(@NonNull EditAdapter.MyViewHolder holder, int position) {
         Log.d("pttt", Integer.valueOf(position).toString());
-        String key = keys.get(position).toString();
-        String value = values.get(position).toString();
-        String type = dataSet.get(keys.get(position)).getClass().getSimpleName();
+        String key = dataSet.get(position).getKey();
+        String value = dataSet.get(position).getValue();
+        String type = dataSet.get(position).getType();
         holder.edit_EDT_key.setText(key);
+        holder.edit_EDT_key.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                //dataSet.get(position).setKey(holder.edit_EDT_key.getText().toString());
+                holder.key = data.get(holder.getAdapterPosition()).edit_EDT_key.getText().toString();
+            }
+        });
         holder.edit_EDT_value.setText(value);
+        holder.edit_EDT_value.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                //dataSet.get(position).setValue(holder.edit_EDT_value.getText().toString());
+                holder.value = data.get(holder.getAdapterPosition()).edit_EDT_value.getText().toString();
+            }
+        });
         holder.edit_LBL_type.setText(type);
+        holder.type = holder.edit_LBL_type.getText().toString();
         holder.edit_BTN_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dataSet.remove(key);
-                keys.remove(position);
-                values.remove(position);
-                notifyItemRemoved(position);
-                notifyDataSetChanged();
+                dataSet.remove(holder.getAdapterPosition());
+                data.remove(holder.getAdapterPosition());
+                notifyItemRemoved(holder.getAdapterPosition());
             }
         });
     }
@@ -77,5 +111,12 @@ public class EditAdapter extends RecyclerView.Adapter<EditAdapter.MyViewHolder> 
     public int getItemCount() {
         return dataSet.size();
     }
+
+    public ArrayList<EditAdapter.MyViewHolder> getViewHolderArrayList(){
+        return data;
+    }
+
+    public ArrayList<SharedPreferencesField> getDataSet() { return dataSet;}
+
 
 }

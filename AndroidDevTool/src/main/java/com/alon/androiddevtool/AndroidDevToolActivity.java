@@ -59,6 +59,11 @@ public class AndroidDevToolActivity extends AppCompatActivity implements Navigat
         set.add("12312");
         set.add("sdf");
         editor.putStringSet("set", set);
+        editor.putInt("num1", 99);
+        editor.putInt("num2", 99);
+        editor.putInt("num3", 99);
+        editor.putInt("num4", 99);
+        editor.putInt("num5", 99);
         editor.apply();
     }
 

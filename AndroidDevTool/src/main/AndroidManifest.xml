@@ -5,7 +5,7 @@
     <application android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
             android:name=".EditFileActivity"
-            android:windowSoftInputMode="adjustNothing"></activity>
+            android:windowSoftInputMode="adjustPan"></activity>
         <activity android:name=".AndroidDevToolActivity">
             <intent-filter>
                 <action android:name="com.alon.androiddevtool" />
