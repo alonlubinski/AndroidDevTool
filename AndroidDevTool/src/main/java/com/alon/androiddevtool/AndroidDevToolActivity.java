@@ -22,7 +22,6 @@ import com.alon.androiddevtool.fragments.HomeFragment;
 import com.alon.androiddevtool.fragments.SharedPreferencesFragment;
 import com.google.android.material.navigation.NavigationView;
 
-import java.util.HashSet;
 import java.util.Set;
 
 public class AndroidDevToolActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {

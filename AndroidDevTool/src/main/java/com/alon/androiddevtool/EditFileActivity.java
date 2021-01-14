@@ -99,6 +99,7 @@ public class EditFileActivity extends AppCompatActivity implements View.OnClickL
         edit_RCV.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         edit_RCV.setLayoutManager(layoutManager);
+        edit_RCV.setItemViewCacheSize(spData.size());
         editAdapter = new EditAdapter(spData);
         edit_RCV.setAdapter(editAdapter);
     }
@@ -106,12 +107,13 @@ public class EditFileActivity extends AppCompatActivity implements View.OnClickL
     // Function that validates the edit shared preferences form.
     private boolean validateForm() {
         boolean flag = true;
+        spData = editAdapter.getDataSet();
         viewHolderArrayList = editAdapter.getViewHolderArrayList();
         for (int i = 0; i < viewHolderArrayList.size(); i++) {
             Log.d("pttt", "CHECK - " + Integer.valueOf(i).toString());
-            String key = ((EditText)viewHolderArrayList.get(i).itemView.findViewById(R.id.edit_EDT_key)).getText().toString().trim();
-            String value = ((EditText)viewHolderArrayList.get(i).itemView.findViewById(R.id.edit_EDT_value)).getText().toString().trim();
-            String type = ((TextView)viewHolderArrayList.get(i).itemView.findViewById(R.id.edit_LBL_type)).getText().toString();
+            String key = spData.get(i).getKey().trim();
+            String value = spData.get(i).getValue().trim();
+            String type = spData.get(i).getType();
             if (key.equals("")) {
                 ((EditText)viewHolderArrayList.get(i).itemView.findViewById(R.id.edit_EDT_key)).setError("Empty field");
                 flag = false;
@@ -166,32 +168,34 @@ public class EditFileActivity extends AppCompatActivity implements View.OnClickL
         SharedPreferences sp = getApplicationContext().getSharedPreferences(sp_name, MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.clear();
-        for (int i = 0; i < viewHolderArrayList.size(); i++) {
+        for (int i = 0; i < spData.size(); i++) {
             Log.d("pttt", "SAVE - " + Integer.valueOf(i).toString());
-            String key = ((EditText)viewHolderArrayList.get(i).itemView.findViewById(R.id.edit_EDT_key)).getText().toString().trim();
-            String value = ((EditText)viewHolderArrayList.get(i).itemView.findViewById(R.id.edit_EDT_value)).getText().toString().trim();
-            String type = ((TextView)viewHolderArrayList.get(i).itemView.findViewById(R.id.edit_LBL_type)).getText().toString();
+            String key = spData.get(i).getKey().trim();
+            String value = spData.get(i).getValue().trim();
+            String type = spData.get(i).getType();
             try {
-                if (type.equals("String")) {
-                    editor.putString(key, value);
-                } else if (type.equals("Integer")) {
-                    int integerNum = Integer.parseInt(value);
-                    editor.putInt(key, integerNum);
-                } else if (type.equals("Float")) {
-                    float floatNum = Float.parseFloat(value);
-                    editor.putFloat(key, floatNum);
-                } else if (type.equals("Long")) {
-                    long longNum = Long.parseLong(value);
-                    editor.putLong(key, longNum);
-                } else if (type.equals("Boolean")) {
-                    boolean boolValue = Boolean.parseBoolean(value);
-                    editor.putBoolean(key, boolValue);
-                } else if (type.equals("HashSet")) {
-                    String newValue = value.substring(1, value.length() - 1);
-                    String[] stringSplit = newValue.split(", ");
-                    List<String> list = Arrays.asList(stringSplit);
-                    HashSet<String> set = new HashSet<String>(list);
-                    editor.putStringSet(key, set);
+                if(!key.equals("") && !value.equals("")) {
+                    if (type.equals("String")) {
+                        editor.putString(key, value);
+                    } else if (type.equals("Integer")) {
+                        int integerNum = Integer.parseInt(value);
+                        editor.putInt(key, integerNum);
+                    } else if (type.equals("Float")) {
+                        float floatNum = Float.parseFloat(value);
+                        editor.putFloat(key, floatNum);
+                    } else if (type.equals("Long")) {
+                        long longNum = Long.parseLong(value);
+                        editor.putLong(key, longNum);
+                    } else if (type.equals("Boolean")) {
+                        boolean boolValue = Boolean.parseBoolean(value);
+                        editor.putBoolean(key, boolValue);
+                    } else if (type.equals("HashSet")) {
+                        String newValue = value.substring(1, value.length() - 1);
+                        String[] stringSplit = newValue.split(", ");
+                        List<String> list = Arrays.asList(stringSplit);
+                        HashSet<String> set = new HashSet<String>(list);
+                        editor.putStringSet(key, set);
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -251,8 +255,9 @@ public class EditFileActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String type = Arrays.asList(typesArray).get(selectedType);
-                spData.add(new SharedPreferencesField("", "", type));
-                editAdapter.notifyItemInserted(editAdapter.getItemCount());
+                editAdapter.getDataSet().add(new SharedPreferencesField("", "", type));
+                edit_RCV.setItemViewCacheSize(editAdapter.getDataSet().size());
+                editAdapter.notifyItemInserted(editAdapter.getDataSet().size());
             }
         });
         AlertDialog alertDialog = builder.create();
