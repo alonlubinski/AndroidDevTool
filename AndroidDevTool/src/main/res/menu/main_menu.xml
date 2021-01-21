@@ -15,7 +15,8 @@
 
         <item
             android:id="@+id/menu_db"
-            android:title="@string/menu_db"/>
+            android:title="@string/menu_db"
+            android:icon="@drawable/ic_db"/>
 
     </group>
 </menu>

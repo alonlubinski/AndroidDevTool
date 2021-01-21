@@ -6,10 +6,19 @@
     tools:context=".fragments.DatabaseFragment">
 
     <TextView
+        android:id="@+id/database_LBL_empty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Database Fragment"
-        android:textSize="30sp"
+        android:text="@string/empty_database_str"
+        android:textSize="20sp"
         android:layout_gravity="center"/>
+
+    <ExpandableListView
+        android:id="@+id/db_ELV"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:groupIndicator="@null">
+
+    </ExpandableListView>
 
 </FrameLayout>

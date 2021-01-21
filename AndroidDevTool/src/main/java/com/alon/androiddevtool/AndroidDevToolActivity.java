@@ -109,7 +109,7 @@ public class AndroidDevToolActivity extends AppCompatActivity implements Navigat
             fragment = new SharedPreferencesFragment(getApplicationContext());
         } else if (item.getItemId() == R.id.menu_db){
             Log.d("pttt", "Database");
-            fragment = new DatabaseFragment();
+            fragment = new DatabaseFragment(getApplicationContext());
         }
         if(fragment != null){
             changeFragment(fragment, item);

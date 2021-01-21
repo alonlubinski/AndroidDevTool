@@ -9,4 +9,5 @@
     <string name="key_str">Key</string>
     <string name="value_str">Value</string>
     <string name="type_str">Type</string>
+    <string name="empty_database_str">There are no databases yet</string>
 </resources>

@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 
 import com.alon.androiddevtool.R;
-import com.alon.androiddevtool.adapters.ExpandableListAdapter;
+import com.alon.androiddevtool.adapters.SPExpandableListAdapter;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ import java.util.Map;
 public class SharedPreferencesFragment extends Fragment {
 
     private ExpandableListView sp_ELV;
-    private ExpandableListAdapter expandableListAdapter;
+    private SPExpandableListAdapter expandableListAdapter;
     private List<String> listDataHeader;
     private HashMap<String, Map<String, ?>> listHash;
 
@@ -77,7 +77,7 @@ public class SharedPreferencesFragment extends Fragment {
                 listHash.put(list[i], map);
             }
         }
-        expandableListAdapter = new ExpandableListAdapter(context, getContext(), listDataHeader, listHash);
+        expandableListAdapter = new SPExpandableListAdapter(context, getContext(), listDataHeader, listHash);
         sp_ELV.setAdapter(expandableListAdapter);
     }
 

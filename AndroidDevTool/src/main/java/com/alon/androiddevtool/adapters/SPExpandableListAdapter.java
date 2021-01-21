@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ExpandableListAdapter extends BaseExpandableListAdapter {
+public class SPExpandableListAdapter extends BaseExpandableListAdapter {
 
     private Context context;
     private Context fragmentContext;
@@ -30,7 +29,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private HashMap<String, Map<String, ?>> listHashMap;
 
 
-    public ExpandableListAdapter(Context context, Context fragmentContext, List<String> listDataHeader, HashMap<String, Map<String, ?>> listHashMap) {
+    public SPExpandableListAdapter(Context context, Context fragmentContext, List<String> listDataHeader, HashMap<String, Map<String, ?>> listHashMap) {
         this.context = context;
         this.fragmentContext = fragmentContext;
         this.listDataHeader = listDataHeader;
@@ -77,7 +76,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         String headerTitle = (String) getGroup(groupPosition);
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.list_header, null);
+            convertView = inflater.inflate(R.layout.sp_list_header, null);
         }
         TextView header_LBL_title = (TextView) convertView.findViewById(R.id.header_LBL_title);
         header_LBL_title.setTypeface(null, Typeface.BOLD);
@@ -112,7 +111,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         Object[] keys = map.keySet().toArray();
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.list_item, null);
+            convertView = inflater.inflate(R.layout.sp_list_item, null);
         }
         TextView list_LBL_key = (TextView) convertView.findViewById(R.id.list_LBL_key);
         TextView list_LBL_value = (TextView) convertView.findViewById(R.id.list_LBL_value);
