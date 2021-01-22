@@ -1,6 +1,7 @@
 package com.alon.androiddevtool.fragments;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -14,10 +15,11 @@ import android.widget.TextView;
 
 import com.alon.androiddevtool.R;
 import com.alon.androiddevtool.adapters.DBExpandableListAdapter;
+import com.alon.androiddevtool.models.DBPojo;
+import com.alon.androiddevtool.utils.DBHelper;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class DatabaseFragment extends Fragment {
@@ -26,7 +28,11 @@ public class DatabaseFragment extends Fragment {
     private TextView database_LBL_empty;
     private ExpandableListView db_ELV;
     private DBExpandableListAdapter dbExpandableListAdapter;
-    private List<String> listDataHeader;
+    private ArrayList<DBPojo> dataSet;
+    private ArrayList<String> tablesNames;
+    private DBHelper dbHelper;
+    private Cursor cursor;
+    private String tableName;
 
     public DatabaseFragment(Context context) {
         // Required empty public constructor
@@ -57,9 +63,8 @@ public class DatabaseFragment extends Fragment {
 
     private void initData(){
         Log.d("pttt", "initData");
-        listDataHeader = new ArrayList<>();
-        //listHash = new HashMap<>();
-        
+        dataSet = new ArrayList<>();
+
         File db_dir = new File(context.getApplicationInfo().dataDir, "databases");
         if(db_dir.exists() && db_dir.isDirectory()){
             Log.d("pttt", "Exist");
@@ -68,15 +73,24 @@ public class DatabaseFragment extends Fragment {
                 database_LBL_empty.setVisibility(View.GONE);
                 for (int i = 0; i < list.length; i = i + 2) {
                     Log.d("pttt", list[i]);
-                    listDataHeader.add(list[i]);
-//                listDataHeader.add(list[i]);
-//                String sp_name = list[i].substring(0, list[i].length()-4);
-//                SharedPreferences sp = context.getSharedPreferences(sp_name, Context.MODE_PRIVATE);
-//                Map<String, ?> map = sp.getAll();
-//                for(Map.Entry<String, ?> entry : map.entrySet()){
-//                    Log.d("pttt", "key is: " + entry.getKey() + " --- value is: " + entry.getValue());
-//                }
-                    //listHash.put(list[i], map);
+                    tablesNames = new ArrayList<>();
+                    dbHelper = new DBHelper(context, list[i], 2);
+                    DBPojo dbPojo = new DBPojo();
+                    dbPojo.setName(list[i]);
+                    cursor = dbHelper.getTablesName();
+                    if(cursor.moveToFirst()){
+                        while(!cursor.isAfterLast()){
+                           tableName = cursor.getString(cursor.getColumnIndex("name"));
+                           Log.d("pttt", cursor.getString(cursor.getColumnIndex("name")));
+                           if(!tableName.equals("sqlite_sequence") && !tableName.equals("android_metadata")){
+                               tablesNames.add(tableName);
+                           }
+                           cursor.moveToNext();
+                        }
+                    }
+                    dbPojo.setTables(tablesNames);
+                    dataSet.add(dbPojo);
+                    dbHelper.close();
                 }
             } else {
                 database_LBL_empty.setVisibility(View.VISIBLE);
@@ -85,7 +99,7 @@ public class DatabaseFragment extends Fragment {
             Log.d("pttt", "Not Exist");
             database_LBL_empty.setVisibility(View.VISIBLE);
         }
-        dbExpandableListAdapter = new DBExpandableListAdapter(context, getContext(), listDataHeader);
+        dbExpandableListAdapter = new DBExpandableListAdapter(context, getContext(), dataSet);
         db_ELV.setAdapter(dbExpandableListAdapter);
     }
 

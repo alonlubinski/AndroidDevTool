@@ -11,6 +11,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private Context context;
     private String dbName;
+    private SQLiteDatabase db;
 
     public DBHelper(@Nullable Context context, @Nullable String name, int version) {
         super(context, name, null, version);
@@ -28,9 +29,19 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
-    public Cursor getInfo(){
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery("select * from " + this.dbName, null);
+    public Cursor getInfo(String tableName){
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("select * from " + tableName, null);
         return cursor;
+    }
+
+    public Cursor getTablesName(){
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("select name from sqlite_master where type='table'", null);
+        return cursor;
+    }
+
+    public void closeDB(){
+        db.close();
     }
 }

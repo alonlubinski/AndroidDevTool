@@ -3,9 +3,10 @@
     package="com.alon.androiddevtool">
 
     <application android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <activity android:name=".DBTableActivity"></activity>
         <activity
             android:name=".EditFileActivity"
-            android:windowSoftInputMode="adjustPan"></activity>
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".AndroidDevToolActivity">
             <intent-filter>
                 <action android:name="com.alon.androiddevtool" />
