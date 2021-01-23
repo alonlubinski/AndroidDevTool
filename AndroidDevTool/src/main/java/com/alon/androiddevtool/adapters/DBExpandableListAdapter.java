@@ -16,6 +16,8 @@ import com.alon.androiddevtool.EditFileActivity;
 import com.alon.androiddevtool.R;
 import com.alon.androiddevtool.models.DBPojo;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,7 +47,7 @@ public class DBExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getGroup(int groupPosition) {
-        return dataSet.get(groupPosition).getName();
+        return dataSet.get(groupPosition);
     }
 
     @Override
@@ -70,14 +72,18 @@ public class DBExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        String headerTitle = (String) getGroup(groupPosition);
+        DBPojo dbPojo = (DBPojo) getGroup(groupPosition);
+        String headerTitle = dbPojo.getName();
+        String version = Integer.valueOf(dbPojo.getVersion()).toString();
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.db_list_header, null);
         }
         TextView header_LBL_title = (TextView) convertView.findViewById(R.id.header_LBL_title);
+        TextView header_LBL_version = (TextView) convertView.findViewById(R.id.header_LBL_version);
         header_LBL_title.setTypeface(null, Typeface.BOLD);
         header_LBL_title.setText(headerTitle);
+        header_LBL_version.setText("version " + version);
 
         return convertView;
     }
@@ -90,13 +96,12 @@ public class DBExpandableListAdapter extends BaseExpandableListAdapter {
             convertView = inflater.inflate(R.layout.db_list_item, null);
         }
         TextView list_LBL_title = (TextView) convertView.findViewById(R.id.list_LBL_title);
-        //list_LBL_title.setTypeface(null, Typeface.BOLD);
         list_LBL_title.setText(childTitle);
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d("pttt", childTitle);
-                startDBTableActivity(dataSet.get(groupPosition).getName(), childTitle);
+                startDBTableActivity(dataSet.get(groupPosition).getName(), childTitle, dataSet.get(groupPosition).getVersion());
             }
         });
         return convertView;
@@ -107,10 +112,11 @@ public class DBExpandableListAdapter extends BaseExpandableListAdapter {
         return true;
     }
 
-    private void startDBTableActivity(String dbName, String tableName) {
+    private void startDBTableActivity(String dbName, String tableName, int dbVersion) {
         Intent intent = new Intent(fragmentContext, DBTableActivity.class);
         intent.putExtra("dbName", dbName);
         intent.putExtra("tableName", tableName);
+        intent.putExtra("dbVersion", dbVersion);
         fragmentContext.startActivity(intent);
     }
 }

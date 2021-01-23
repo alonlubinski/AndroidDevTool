@@ -16,13 +16,16 @@ import android.widget.TextView;
 import com.alon.androiddevtool.R;
 import com.alon.androiddevtool.adapters.DBExpandableListAdapter;
 import com.alon.androiddevtool.models.DBPojo;
+import com.alon.androiddevtool.taskrunner.GetDBContentTask;
+import com.alon.androiddevtool.taskrunner.TaskRunner;
+import com.alon.androiddevtool.taskrunner.iOnDataFetched;
 import com.alon.androiddevtool.utils.DBHelper;
 
 import java.io.File;
 import java.util.ArrayList;
 
 
-public class DatabaseFragment extends Fragment {
+public class DatabaseFragment extends Fragment implements iOnDataFetched {
 
     private Context context;
     private TextView database_LBL_empty;
@@ -33,6 +36,7 @@ public class DatabaseFragment extends Fragment {
     private DBHelper dbHelper;
     private Cursor cursor;
     private String tableName;
+    private TaskRunner taskRunner;
 
     public DatabaseFragment(Context context) {
         // Required empty public constructor
@@ -51,6 +55,7 @@ public class DatabaseFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_database, container, false);
         findAll(view);
+        taskRunner = new TaskRunner();
 
         return view;
     }
@@ -71,27 +76,7 @@ public class DatabaseFragment extends Fragment {
             String[] list = db_dir.list();
             if(list.length > 0) {
                 database_LBL_empty.setVisibility(View.GONE);
-                for (int i = 0; i < list.length; i = i + 2) {
-                    Log.d("pttt", list[i]);
-                    tablesNames = new ArrayList<>();
-                    dbHelper = new DBHelper(context, list[i], 2);
-                    DBPojo dbPojo = new DBPojo();
-                    dbPojo.setName(list[i]);
-                    cursor = dbHelper.getTablesName();
-                    if(cursor.moveToFirst()){
-                        while(!cursor.isAfterLast()){
-                           tableName = cursor.getString(cursor.getColumnIndex("name"));
-                           Log.d("pttt", cursor.getString(cursor.getColumnIndex("name")));
-                           if(!tableName.equals("sqlite_sequence") && !tableName.equals("android_metadata")){
-                               tablesNames.add(tableName);
-                           }
-                           cursor.moveToNext();
-                        }
-                    }
-                    dbPojo.setTables(tablesNames);
-                    dataSet.add(dbPojo);
-                    dbHelper.close();
-                }
+                taskRunner.executeAsync(new GetDBContentTask(this, context, list));
             } else {
                 database_LBL_empty.setVisibility(View.VISIBLE);
             }
@@ -99,8 +84,7 @@ public class DatabaseFragment extends Fragment {
             Log.d("pttt", "Not Exist");
             database_LBL_empty.setVisibility(View.VISIBLE);
         }
-        dbExpandableListAdapter = new DBExpandableListAdapter(context, getContext(), dataSet);
-        db_ELV.setAdapter(dbExpandableListAdapter);
+
     }
 
     @Override
@@ -111,5 +95,21 @@ public class DatabaseFragment extends Fragment {
             db_ELV.removeAllViewsInLayout();
         }
         initData();
+    }
+
+    @Override
+    public void showProgressBar() {
+        Log.d("pttt", "Loading");
+    }
+
+    @Override
+    public void hideProgressBar() {
+        Log.d("pttt", "Finish Loading");
+    }
+
+    @Override
+    public void setDataInPageWithResult(Object result) {
+        dbExpandableListAdapter = new DBExpandableListAdapter(context, getContext(), (ArrayList)result);
+        db_ELV.setAdapter(dbExpandableListAdapter);
     }
 }
