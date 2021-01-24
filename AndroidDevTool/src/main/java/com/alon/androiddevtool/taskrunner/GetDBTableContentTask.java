@@ -2,15 +2,17 @@ package com.alon.androiddevtool.taskrunner;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
+import android.graphics.Typeface;
+import android.view.Gravity;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 
-import com.alon.androiddevtool.models.DBPojo;
 import com.alon.androiddevtool.utils.DBHelper;
 
 import java.util.ArrayList;
 
-public class GetDBTableContentTask extends BaseTask{
+public class GetDBTableContentTask extends BaseTask {
 
     private final iOnDataFetched listener;//listener in fragment that shows and hides ProgressBar
     private final Context context;
@@ -27,24 +29,45 @@ public class GetDBTableContentTask extends BaseTask{
     }
 
     @Override
-    public Object call() throws Exception {
+    public Object call() {
         ArrayList<ArrayList<String>> data = new ArrayList<>();
         DBHelper dbHelper = new DBHelper(context, dbName, dbVersion);
         Cursor cursor = dbHelper.getInfo(tableName);
         String[] columnNames = cursor.getColumnNames();
         data.add(new ArrayList<>());
-        for(int i = 0; i < columnNames.length; i++){
+        for (int i = 0; i < columnNames.length; i++) {
             data.get(0).add(columnNames[i]);
         }
-        while(cursor.moveToNext()){
+        while (cursor.moveToNext()) {
             data.add(new ArrayList<>());
-            for(int i = 0; i < columnNames.length; i++){
+            for (int i = 0; i < columnNames.length; i++) {
                 data.get(data.size() - 1).add(cursor.getString(i));
             }
         }
         dbHelper.closeDB();
         dbHelper.close();
-        return data;
+        TableLayout table_LYT = new TableLayout(context);
+        table_LYT.setStretchAllColumns(true);
+
+        for (int i = 0; i < data.size(); i++) {
+            TableRow row = new TableRow(context);
+            row.setPadding(10, 5, 10, 5);
+            row.setGravity(Gravity.CENTER);
+            ArrayList<String> arr = data.get(i);
+            for (int j = 0; j < arr.size(); j++) {
+                TextView textView = new TextView(context);
+                textView.setText(arr.get(j));
+                textView.setPadding(10, 5, 10, 5);
+                if (i == 0) {
+                    textView.setTypeface(null, Typeface.BOLD);
+                    textView.setTextSize(15);
+                }
+                textView.setGravity(Gravity.CENTER);
+                row.addView(textView);
+            }
+            table_LYT.addView(row);
+        }
+        return table_LYT;
     }
 
     @Override
@@ -54,7 +77,7 @@ public class GetDBTableContentTask extends BaseTask{
 
     @Override
     public void setDataAfterLoading(Object result) {
-        listener.hideProgressBar();
         listener.setDataInPageWithResult(result);
+        listener.hideProgressBar();
     }
 }
