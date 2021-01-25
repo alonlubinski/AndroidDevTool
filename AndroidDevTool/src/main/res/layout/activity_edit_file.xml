@@ -107,4 +107,15 @@
 
     </LinearLayout>
 
+    <ProgressBar
+        android:id="@+id/edit_PGB"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:progressDrawable="@drawable/circular_progress_bar"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:theme="@style/Widget.AppCompat.ProgressBar"/>
+
 </RelativeLayout>

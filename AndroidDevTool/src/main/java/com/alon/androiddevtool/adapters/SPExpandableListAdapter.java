@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,7 +86,6 @@ public class SPExpandableListAdapter extends BaseExpandableListAdapter {
         header_BTN_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("pttt", "EDIT");
                 startEditFileActivity(headerTitle);
             }
         });
@@ -97,7 +95,6 @@ public class SPExpandableListAdapter extends BaseExpandableListAdapter {
         header_BTN_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("pttt", "DELETE");
                 showConfirmationDialog(headerTitle);
             }
         });
@@ -128,7 +125,12 @@ public class SPExpandableListAdapter extends BaseExpandableListAdapter {
         return true;
     }
 
-    private void showConfirmationDialog(String headerTitle){
+    /**
+     * Function that shows confirmation dialog.
+     *
+     * @param headerTitle Name of the file.
+     */
+    private void showConfirmationDialog(String headerTitle) {
         AlertDialog.Builder builder = new AlertDialog.Builder(fragmentContext);
         builder.setTitle("Delete");
         builder.setMessage("Are you sure you want to delete " + headerTitle + "?");
@@ -136,7 +138,6 @@ public class SPExpandableListAdapter extends BaseExpandableListAdapter {
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Log.d("pttt", "YES");
                 File sp_dir = new File(context.getApplicationInfo().dataDir, "shared_prefs");
                 listDataHeader.remove(headerTitle);
                 listHashMap.remove(headerTitle);
@@ -148,16 +149,18 @@ public class SPExpandableListAdapter extends BaseExpandableListAdapter {
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Log.d("pttt", "NO");
-                File sp_dir = new File(context.getApplicationInfo().dataDir, "shared_prefs");
-                Log.d("pttt", sp_dir.getPath());
             }
         });
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
 
-    private void startEditFileActivity(String headerTitle){
+    /**
+     * Function that start the EditFileActivity.
+     *
+     * @param headerTitle Name of the file.
+     */
+    private void startEditFileActivity(String headerTitle) {
         Intent intent = new Intent(fragmentContext, EditFileActivity.class);
         intent.putExtra("headerTitle", headerTitle);
         fragmentContext.startActivity(intent);

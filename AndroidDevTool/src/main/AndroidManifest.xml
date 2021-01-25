@@ -9,7 +9,7 @@
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".AndroidDevToolActivity">
             <intent-filter>
-                <action android:name="com.alon.androiddevtool" />
+                <action android:name="AndroidDevTool" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

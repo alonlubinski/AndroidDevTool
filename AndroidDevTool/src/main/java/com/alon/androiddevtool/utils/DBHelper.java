@@ -29,18 +29,30 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
+    /**
+     * Function that gets content of specific table.
+     * @param tableName Table name.
+     * @return Cursor
+     */
     public Cursor getInfo(String tableName){
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery("select * from " + tableName, null);
         return cursor;
     }
 
+    /**
+     * Functions that gets all tables name in the database.
+     * @return Cursor
+     */
     public Cursor getTablesName(){
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery("select name from sqlite_master where type='table'", null);
         return cursor;
     }
 
+    /**
+     * Function that close the database.
+     */
     public void closeDB(){
         db.close();
     }

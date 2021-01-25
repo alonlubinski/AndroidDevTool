@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void startDevActivity() {
-        Intent intent = new Intent("com.alon.androiddevtool");
+        Intent intent = new Intent("AndroidDevTool");
         startActivity(intent);
     }
 }

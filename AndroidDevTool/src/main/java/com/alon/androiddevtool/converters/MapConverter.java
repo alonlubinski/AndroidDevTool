@@ -1,6 +1,5 @@
 package com.alon.androiddevtool.converters;
 
-import android.util.Log;
 
 import com.alon.androiddevtool.models.SharedPreferencesField;
 
@@ -9,10 +8,16 @@ import java.util.Map;
 
 public class MapConverter {
 
-    public MapConverter(){
+    public MapConverter() {
 
     }
 
+    /**
+     * Function that converts Map to ArrayList.
+     *
+     * @param map The map to convert.
+     * @return ArrayList
+     */
     public ArrayList<SharedPreferencesField> fromMap(Map<String, ?> map) {
         ArrayList<SharedPreferencesField> arrayList = new ArrayList<>();
         SharedPreferencesField field = null;

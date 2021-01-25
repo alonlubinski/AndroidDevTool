@@ -5,32 +5,30 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alon.androiddevtool.adapters.EditAdapter;
-import com.alon.androiddevtool.converters.MapConverter;
 import com.alon.androiddevtool.models.SharedPreferencesField;
+import com.alon.androiddevtool.taskrunner.GetSPContentTask;
+import com.alon.androiddevtool.taskrunner.TaskRunner;
+import com.alon.androiddevtool.taskrunner.iOnDataFetched;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 
-public class EditFileActivity extends AppCompatActivity implements View.OnClickListener {
+public class EditFileActivity extends AppCompatActivity implements View.OnClickListener, iOnDataFetched {
 
     private TextView edit_LBL_title;
     private ImageButton edit_BTN_add;
@@ -39,12 +37,12 @@ public class EditFileActivity extends AppCompatActivity implements View.OnClickL
     private EditAdapter editAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private String fileName;
-    private Map<String, ?> fileContent = new HashMap<>();
     private ArrayList<SharedPreferencesField> spData = new ArrayList<>();
     private ArrayList<EditAdapter.MyViewHolder> viewHolderArrayList;
-    private MapConverter mapConverter = new MapConverter();
     private Handler handler = new Handler();
     private int selectedType;
+    private TaskRunner taskRunner;
+    private ProgressBar edit_PGB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,49 +50,49 @@ public class EditFileActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_edit_file);
         findAll();
         setClickListeners();
+        taskRunner = new TaskRunner();
+        edit_PGB.setVisibility(View.GONE);
         if (getIntent().getExtras() != null) {
             fileName = getIntent().getStringExtra("headerTitle");
             edit_LBL_title.setText(fileName);
             getDataFromFile(fileName);
-            initRecyclerView();
+
         }
     }
 
-    // Function that finds all the views by id.
+    /**
+     * Function that finds all the view by id.
+     */
     private void findAll() {
         edit_LBL_title = findViewById(R.id.edit_LBL_title);
         edit_BTN_add = findViewById(R.id.edit_BTN_add);
         edit_BTN_confirm = findViewById(R.id.edit_BTN_confirm);
         edit_BTN_cancel = findViewById(R.id.edit_BTN_cancel);
         edit_RCV = findViewById(R.id.edit_RCV);
+        edit_PGB = findViewById(R.id.edit_PGB);
     }
 
-    // Function that sets click listeners.
+    /**
+     * Function that sets all click listeners.
+     */
     private void setClickListeners() {
         edit_BTN_add.setOnClickListener(this);
         edit_BTN_confirm.setOnClickListener(this);
         edit_BTN_cancel.setOnClickListener(this);
     }
 
-    // Function that gets the data from file.
+    /**
+     * Function that gets the data from specific shared preferences file.
+     *
+     * @param fileName Shared preferences file name.
+     */
     private void getDataFromFile(String fileName) {
-        File sp_dir = new File(getApplicationContext().getApplicationInfo().dataDir, "shared_prefs");
-        if (sp_dir.exists() && sp_dir.isDirectory()) {
-            String[] list = sp_dir.list();
-            for (int i = 0; i < list.length; i++) {
-                if (list[i].equals(fileName)) {
-                    Log.d("pttt", list[i]);
-                    String sp_name = list[i].substring(0, list[i].length() - 4);
-                    SharedPreferences sp = getApplicationContext().getSharedPreferences(sp_name, Context.MODE_PRIVATE);
-                    fileContent = sp.getAll();
-                    spData = mapConverter.fromMap(fileContent);
-                    return;
-                }
-            }
-        }
+        taskRunner.executeAsync(new GetSPContentTask(this, getApplicationContext(), fileName));
     }
 
-    // Function that init the recycler view.
+    /**
+     * Function that init the recycler view.
+     */
     private void initRecyclerView() {
         edit_RCV.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
@@ -104,30 +102,33 @@ public class EditFileActivity extends AppCompatActivity implements View.OnClickL
         edit_RCV.setAdapter(editAdapter);
     }
 
-    // Function that validates the edit shared preferences form.
+    /**
+     * Function that validates the edit shared preferences form.
+     *
+     * @return Boolean
+     */
     private boolean validateForm() {
         boolean flag = true;
         spData = editAdapter.getDataSet();
         viewHolderArrayList = editAdapter.getViewHolderArrayList();
         for (int i = 0; i < viewHolderArrayList.size(); i++) {
-            Log.d("pttt", "CHECK - " + Integer.valueOf(i).toString());
             String key = spData.get(i).getKey().trim();
             String value = spData.get(i).getValue().trim();
             String type = spData.get(i).getType();
             if (key.equals("")) {
-                ((EditText)viewHolderArrayList.get(i).itemView.findViewById(R.id.edit_EDT_key)).setError("Empty field");
+                ((EditText) viewHolderArrayList.get(i).itemView.findViewById(R.id.edit_EDT_key)).setError("Empty field");
                 flag = false;
             }
             if (value.equals("")) {
-                ((EditText)viewHolderArrayList.get(i).itemView.findViewById(R.id.edit_EDT_value)).setError("Empty field");
+                ((EditText) viewHolderArrayList.get(i).itemView.findViewById(R.id.edit_EDT_value)).setError("Empty field");
                 flag = false;
             } else if (!checkValueType(value, type)) {
                 if (type.equals("Boolean")) {
-                    ((EditText)viewHolderArrayList.get(i).itemView.findViewById(R.id.edit_EDT_value)).setError("Fill true or false (with lowercase)");
+                    ((EditText) viewHolderArrayList.get(i).itemView.findViewById(R.id.edit_EDT_value)).setError("Fill true or false (with lowercase)");
                 } else if (type.equals("HashSet")) {
-                    ((EditText)viewHolderArrayList.get(i).itemView.findViewById(R.id.edit_EDT_value)).setError("HashSet must be surrounded by square brackets");
+                    ((EditText) viewHolderArrayList.get(i).itemView.findViewById(R.id.edit_EDT_value)).setError("HashSet must be surrounded by square brackets");
                 } else {
-                    ((EditText)viewHolderArrayList.get(i).itemView.findViewById(R.id.edit_EDT_value)).setError("Wrong type");
+                    ((EditText) viewHolderArrayList.get(i).itemView.findViewById(R.id.edit_EDT_value)).setError("Wrong type");
                 }
                 flag = false;
             }
@@ -135,7 +136,13 @@ public class EditFileActivity extends AppCompatActivity implements View.OnClickL
         return flag;
     }
 
-    // Function that check if value type is correct.
+    /**
+     * Function that checks if value type is correct.
+     *
+     * @param value Specific value to check.
+     * @param type  The type of the value.
+     * @return Boolean
+     */
     private boolean checkValueType(String value, String type) {
         boolean flag = true;
         try {
@@ -162,19 +169,20 @@ public class EditFileActivity extends AppCompatActivity implements View.OnClickL
         return flag;
     }
 
-    // Function that save all data to shared preferences.
+    /**
+     * Function that saves all data to shared preferences.
+     */
     private void saveDataToSharedPreferences() {
         String sp_name = fileName.substring(0, fileName.length() - 4);
         SharedPreferences sp = getApplicationContext().getSharedPreferences(sp_name, MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.clear();
         for (int i = 0; i < spData.size(); i++) {
-            Log.d("pttt", "SAVE - " + Integer.valueOf(i).toString());
             String key = spData.get(i).getKey().trim();
             String value = spData.get(i).getValue().trim();
             String type = spData.get(i).getType();
             try {
-                if(!key.equals("") && !value.equals("")) {
+                if (!key.equals("") && !value.equals("")) {
                     if (type.equals("String")) {
                         editor.putString(key, value);
                     } else if (type.equals("Integer")) {
@@ -213,6 +221,13 @@ public class EditFileActivity extends AppCompatActivity implements View.OnClickL
         }, 2000);
     }
 
+    /**
+     * Function that show confirmation dialog.
+     *
+     * @param title   Title of the dialog.
+     * @param message Message of the dialog.
+     * @param id      Id of the button that triggered the dialog.
+     */
     private void showConfirmationDialog(String title, String message, int id) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(title);
@@ -221,7 +236,6 @@ public class EditFileActivity extends AppCompatActivity implements View.OnClickL
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Log.d("pttt", "YES");
                 if (id == R.id.edit_BTN_cancel) {
                     finish();
                 } else if (id == R.id.edit_BTN_confirm) {
@@ -232,15 +246,17 @@ public class EditFileActivity extends AppCompatActivity implements View.OnClickL
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Log.d("pttt", "NO");
-
+                setButtonsClickable(true);
             }
         });
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
 
-    private void showAddDialog(){
+    /**
+     * Function that shows add row dialog.
+     */
+    private void showAddDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Select type:");
         final String[] typesArray = new String[]{"String", "Integer", "Float", "Long", "Boolean", "HashSet"};
@@ -264,21 +280,48 @@ public class EditFileActivity extends AppCompatActivity implements View.OnClickL
         alertDialog.show();
     }
 
+    /**
+     * Function that sets all buttons clickable functionality.
+     *
+     * @param bool Boolean value to set for the clickable functionality.
+     */
+    private void setButtonsClickable(boolean bool) {
+        edit_BTN_add.setClickable(bool);
+        edit_BTN_confirm.setClickable(bool);
+        edit_BTN_cancel.setClickable(bool);
+    }
+
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.edit_BTN_add) {
+        if (v.getId() == R.id.edit_BTN_add) {
             showAddDialog();
         } else if (v.getId() == R.id.edit_BTN_confirm) {
-            Log.d("pttt", "Confirm");
+            setButtonsClickable(false);
             if (validateForm()) {
-                Log.d("pttt", "Form is ok");
                 showConfirmationDialog("Save", "Are you sure?", v.getId());
             } else {
-                Log.d("pttt", "Form is not ok");
+                setButtonsClickable(true);
             }
         } else if (v.getId() == R.id.edit_BTN_cancel) {
+            setButtonsClickable(false);
             showConfirmationDialog("Exit", "Are you sure?\nAny unsaved data will be lost.", v.getId());
         }
+    }
+
+    @Override
+    public void showProgressBar() {
+        edit_PGB.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgressBar() {
+        edit_PGB.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void setDataInPageWithResult(Object result) {
+        spData = (ArrayList) result;
+        initRecyclerView();
     }
 }

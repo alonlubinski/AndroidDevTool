@@ -1,7 +1,6 @@
 package com.alon.androiddevtool.fragments;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,15 +10,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.alon.androiddevtool.R;
 import com.alon.androiddevtool.adapters.DBExpandableListAdapter;
-import com.alon.androiddevtool.models.DBPojo;
 import com.alon.androiddevtool.taskrunner.GetDBContentTask;
 import com.alon.androiddevtool.taskrunner.TaskRunner;
 import com.alon.androiddevtool.taskrunner.iOnDataFetched;
-import com.alon.androiddevtool.utils.DBHelper;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -31,11 +29,8 @@ public class DatabaseFragment extends Fragment implements iOnDataFetched {
     private TextView database_LBL_empty;
     private ExpandableListView db_ELV;
     private DBExpandableListAdapter dbExpandableListAdapter;
-    private ArrayList<DBPojo> dataSet;
-    private ArrayList<String> tablesNames;
-    private DBHelper dbHelper;
-    private Cursor cursor;
-    private String tableName;
+    private ProgressBar db_PGB;
+
     private TaskRunner taskRunner;
 
     public DatabaseFragment(Context context) {
@@ -46,7 +41,6 @@ public class DatabaseFragment extends Fragment implements iOnDataFetched {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -55,33 +49,39 @@ public class DatabaseFragment extends Fragment implements iOnDataFetched {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_database, container, false);
         findAll(view);
+        db_PGB.setVisibility(View.GONE);
         taskRunner = new TaskRunner();
-
         return view;
     }
 
-    // Function that finds all the views by id.
-    private void findAll(View view){
+    /**
+     * Function that find all the views by id.
+     *
+     * @param view The root view.
+     */
+    private void findAll(View view) {
         database_LBL_empty = view.findViewById(R.id.database_LBL_empty);
         db_ELV = view.findViewById(R.id.db_ELV);
+        db_PGB = view.findViewById(R.id.db_PGB);
     }
 
-    private void initData(){
-        Log.d("pttt", "initData");
-        dataSet = new ArrayList<>();
-
+    /**
+     * Function that gets all the databases names and tables of each db in other thread.
+     */
+    private void initData() {
+        Log.d("pttt", "DatabaseFragment - initData");
         File db_dir = new File(context.getApplicationInfo().dataDir, "databases");
-        if(db_dir.exists() && db_dir.isDirectory()){
-            Log.d("pttt", "Exist");
+        if (db_dir.exists() && db_dir.isDirectory()) {
+            Log.d("pttt", "DatabaseFragment - Exist");
             String[] list = db_dir.list();
-            if(list.length > 0) {
+            if (list.length > 0) {
                 database_LBL_empty.setVisibility(View.GONE);
                 taskRunner.executeAsync(new GetDBContentTask(this, context, list));
             } else {
                 database_LBL_empty.setVisibility(View.VISIBLE);
             }
         } else {
-            Log.d("pttt", "Not Exist");
+            Log.d("pttt", "DatabaseFragment - Not Exist");
             database_LBL_empty.setVisibility(View.VISIBLE);
         }
 
@@ -91,25 +91,36 @@ public class DatabaseFragment extends Fragment implements iOnDataFetched {
     public void onResume() {
         super.onResume();
         database_LBL_empty.setVisibility(View.GONE);
-        if(db_ELV != null){
+        if (db_ELV != null) {
             db_ELV.removeAllViewsInLayout();
         }
         initData();
     }
 
+    /**
+     * Function that shows the progress bar.
+     */
     @Override
     public void showProgressBar() {
-        Log.d("pttt", "Loading");
+        db_PGB.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * Function that hides the progress bar.
+     */
     @Override
     public void hideProgressBar() {
-        Log.d("pttt", "Finish Loading");
+        db_PGB.setVisibility(View.GONE);
     }
 
+    /**
+     * Function that sets the data to the ui.
+     *
+     * @param result Result object that arrived from other thread.
+     */
     @Override
     public void setDataInPageWithResult(Object result) {
-        dbExpandableListAdapter = new DBExpandableListAdapter(context, getContext(), (ArrayList)result);
+        dbExpandableListAdapter = new DBExpandableListAdapter(context, getContext(), (ArrayList) result);
         db_ELV.setAdapter(dbExpandableListAdapter);
     }
 }

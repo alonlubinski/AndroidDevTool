@@ -38,7 +38,8 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:isScrollContainer="true" />
+                    android:isScrollContainer="true"
+                    android:paddingRight="10dp"/>
 
             </HorizontalScrollView>
         </LinearLayout>

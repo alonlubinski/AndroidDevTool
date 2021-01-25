@@ -8,20 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.alon.androiddevtool.DBTableActivity;
-import com.alon.androiddevtool.EditFileActivity;
 import com.alon.androiddevtool.R;
 import com.alon.androiddevtool.models.DBPojo;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
 
 public class DBExpandableListAdapter extends BaseExpandableListAdapter {
 
@@ -112,6 +106,13 @@ public class DBExpandableListAdapter extends BaseExpandableListAdapter {
         return true;
     }
 
+    /**
+     * Function that starts the DBTableActivity.
+     *
+     * @param dbName    Database name.
+     * @param tableName Table name.
+     * @param dbVersion Database version.
+     */
     private void startDBTableActivity(String dbName, String tableName, int dbVersion) {
         Intent intent = new Intent(fragmentContext, DBTableActivity.class);
         intent.putExtra("dbName", dbName);

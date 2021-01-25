@@ -33,9 +33,8 @@ public class GetDBContentTask extends BaseTask {
         Cursor cursor;
         String tableName;
         int version;
-        for(int i = 0; i < list.length; i++){
-            if(!list[i].endsWith("-journal")) {
-                Log.d("pttt", list[i]);
+        for (int i = 0; i < list.length; i++) {
+            if (!list[i].endsWith("-journal")) {
                 tablesNames = new ArrayList<>();
                 version = getDBVersion(list[i]);
                 dbHelper = new DBHelper(context, list[i], version);
@@ -46,7 +45,6 @@ public class GetDBContentTask extends BaseTask {
                 if (cursor.moveToFirst()) {
                     while (!cursor.isAfterLast()) {
                         tableName = cursor.getString(cursor.getColumnIndex("name"));
-                        Log.d("pttt", cursor.getString(cursor.getColumnIndex("name")));
                         if (!tableName.equals("sqlite_sequence") && !tableName.equals("android_metadata")) {
                             tablesNames.add(tableName);
                         }
@@ -72,7 +70,13 @@ public class GetDBContentTask extends BaseTask {
         listener.hideProgressBar();
     }
 
-    // Function that returns the version of db file.
+    /**
+     * Function that returns the version of db file.
+     *
+     * @param fileName The database file name.
+     * @return Integer
+     * @throws IOException
+     */
     private int getDBVersion(String fileName) throws IOException {
         File file = new File(context.getApplicationInfo().dataDir + "/databases/" + fileName);
         RandomAccessFile fp = new RandomAccessFile(file, "r");

@@ -6,12 +6,14 @@ public class SharedPreferencesField {
     private String value;
     private String type;
 
+    // Constructors.
     public SharedPreferencesField(String key, String value, String type) {
         this.key = key;
         this.value = value;
         this.type = type;
     }
 
+    // Getters and setters.
     public String getKey() {
         return key;
     }
