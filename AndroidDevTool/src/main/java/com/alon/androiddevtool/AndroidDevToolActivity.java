@@ -16,6 +16,7 @@ import android.view.View;
 
 
 import com.alon.androiddevtool.fragments.DatabaseFragment;
+import com.alon.androiddevtool.fragments.FilesFragment;
 import com.alon.androiddevtool.fragments.HomeFragment;
 import com.alon.androiddevtool.fragments.SharedPreferencesFragment;
 import com.google.android.material.navigation.NavigationView;
@@ -89,6 +90,9 @@ public class AndroidDevToolActivity extends AppCompatActivity implements Navigat
         } else if (item.getItemId() == R.id.menu_db) {
             Log.d("pttt", "Database");
             fragment = new DatabaseFragment(getApplicationContext());
+        } else if (item.getItemId() == R.id.menu_files) {
+            Log.d("pttt", "Files");
+            fragment = new FilesFragment(getApplicationContext());
         }
         if (fragment != null) {
             changeFragment(fragment, item);

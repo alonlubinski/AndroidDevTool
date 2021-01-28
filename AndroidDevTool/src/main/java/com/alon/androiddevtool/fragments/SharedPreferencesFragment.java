@@ -69,7 +69,6 @@ public class SharedPreferencesFragment extends Fragment {
     private void initData() {
         listDataHeader = new ArrayList<>();
         listHash = new HashMap<>();
-
         File sp_dir = new File(context.getApplicationInfo().dataDir, "shared_prefs");
         if (sp_dir.exists() && sp_dir.isDirectory()) {
             String[] list = sp_dir.list();

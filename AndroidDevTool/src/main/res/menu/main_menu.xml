@@ -18,5 +18,10 @@
             android:title="@string/menu_db"
             android:icon="@drawable/ic_db"/>
 
+        <item
+            android:id="@+id/menu_files"
+            android:title="@string/files_str"
+            android:icon="@drawable/ic_folder"/>
+
     </group>
 </menu>

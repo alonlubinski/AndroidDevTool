@@ -4,8 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+
+import java.io.File;
+import java.io.FileWriter;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -18,6 +22,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         findAll();
         setClickListeners();
+//        Log.d("pttt", this.getFilesDir().getPath());
+//        File file = new File(this.getFilesDir(), "folder");
+//        if(!file.exists()){
+//            Log.d("pttt", "Not exist");
+//            file.mkdir();
+//        }
+//        try{
+//            File file1 = new File(file, "fileName");
+//            FileWriter writer = new FileWriter(file1);
+//            writer.append("New File");
+//            writer.flush();
+//            writer.close();
+//        } catch (Exception e){
+//            e.printStackTrace();
+//        }
     }
 
     private void findAll() {

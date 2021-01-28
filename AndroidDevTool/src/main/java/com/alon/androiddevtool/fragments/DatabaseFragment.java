@@ -30,7 +30,6 @@ public class DatabaseFragment extends Fragment implements iOnDataFetched {
     private ExpandableListView db_ELV;
     private DBExpandableListAdapter dbExpandableListAdapter;
     private ProgressBar db_PGB;
-
     private TaskRunner taskRunner;
 
     public DatabaseFragment(Context context) {
