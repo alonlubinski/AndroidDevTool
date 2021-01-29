@@ -42,7 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.25"
         android:src="@drawable/ic_delete"
-        android:background="#aa0000"
+        android:background="@drawable/delete_button_shape"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="10dp"/>
 </LinearLayout>
