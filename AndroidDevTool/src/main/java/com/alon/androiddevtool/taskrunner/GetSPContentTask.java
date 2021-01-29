@@ -2,7 +2,6 @@ package com.alon.androiddevtool.taskrunner;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.alon.androiddevtool.converters.MapConverter;
 import com.alon.androiddevtool.models.SharedPreferencesField;

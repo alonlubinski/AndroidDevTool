@@ -2,7 +2,6 @@ package com.alon.androiddevtool.taskrunner;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 
 import com.alon.androiddevtool.models.DBPojo;
 import com.alon.androiddevtool.utils.DBHelper;

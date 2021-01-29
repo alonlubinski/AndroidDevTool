@@ -9,4 +9,34 @@
     <string name="type_str">Type</string>
     <string name="empty_database_str">There are no databases yet</string>
     <string name="files_str">Files</string>
+    <string name="welcome_str">Welcome</string>
+    <string name="credits_str">Credits</string>
+    <string name="icons8_str">Icons by Icons8.</string>
+    <string name="sp_description_str">
+        View, edit and delete the application"'"s shared preferences files.
+        \nClicking on one of the files will display this file"'"s content.
+        \nThere are 2 buttons for each file - one for editing the file, the other for deleting it.
+    </string>
+    <string name="db_description_str">
+        View the application"'"s internal databases.
+        \nClicking on one of the databases will open a list of all the tables that are stored
+        in that database.\nClicking on one of the tables will display this table data.
+    </string>
+    <string name="files_description_str">
+        View the folders and files in the application"'"s internal storage.
+        \nClicking on one of the folders will display this folder content.
+        \nClicking on one of the files will display this file"'"s information.
+    </string>
+    <string name="general_description_str">
+        AndroidDevTool library is a tool for easy debugging of the application"'"s internal files,
+        like: shared preferences files, SQLite databases and regular files. Open the menu to get
+        started.
+    </string>
+    <string name="contact_str">Contact</string>
+    <string name="contact_description_str">Feel free to contact me:</string>
+    <string name="linkedin_profile_str">LinkedIn Profile</string>
+    <string name="github_repo_str">Github Repository</string>
+    <string name="exit_str">Exit</string>
+
+
 </resources>

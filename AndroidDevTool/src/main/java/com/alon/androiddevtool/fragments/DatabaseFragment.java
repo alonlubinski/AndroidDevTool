@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,10 +67,8 @@ public class DatabaseFragment extends Fragment implements iOnDataFetched {
      * Function that gets all the databases names and tables of each db in other thread.
      */
     private void initData() {
-        Log.d("pttt", "DatabaseFragment - initData");
         File db_dir = new File(context.getApplicationInfo().dataDir, "databases");
         if (db_dir.exists() && db_dir.isDirectory()) {
-            Log.d("pttt", "DatabaseFragment - Exist");
             String[] list = db_dir.list();
             if (list.length > 0) {
                 database_LBL_empty.setVisibility(View.GONE);
@@ -80,7 +77,6 @@ public class DatabaseFragment extends Fragment implements iOnDataFetched {
                 database_LBL_empty.setVisibility(View.VISIBLE);
             }
         } else {
-            Log.d("pttt", "DatabaseFragment - Not Exist");
             database_LBL_empty.setVisibility(View.VISIBLE);
         }
 

@@ -33,9 +33,9 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.MyViewHolder
 
         public void bind(final File file, final OnRCVClickListener onRCVClickListener) {
             if (file.isDirectory()) {
-                file_IMG_image.setImageResource(R.drawable.ic_folder);
+                file_IMG_image.setImageResource(R.drawable.img_folder);
             } else {
-                file_IMG_image.setImageResource(R.drawable.ic_file);
+                file_IMG_image.setImageResource(R.drawable.img_doc);
             }
             file_LBL_name.setText(file.getName());
             itemView.setOnClickListener(new View.OnClickListener() {

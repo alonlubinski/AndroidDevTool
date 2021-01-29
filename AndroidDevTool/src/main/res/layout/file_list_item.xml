@@ -14,5 +14,7 @@
     <TextView
         android:id="@+id/file_LBL_name"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textStyle="bold" />
 </LinearLayout>

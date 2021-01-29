@@ -20,7 +20,7 @@ public class TaskRunner {
         }
     }
 
-    public static class RunnableTask<R> implements Runnable{
+    public static class RunnableTask<R> implements Runnable {
         private final Handler handler;
         private final CustomCallable<R> callable;
 
@@ -40,7 +40,7 @@ public class TaskRunner {
         }
     }
 
-    public static class RunnableTaskForHandler<R> implements Runnable{
+    public static class RunnableTaskForHandler<R> implements Runnable {
 
         private CustomCallable<R> callable;
         private R result;

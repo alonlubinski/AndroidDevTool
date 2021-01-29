@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +26,7 @@ import com.alon.androiddevtool.taskrunner.iOnDataFetched;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Stack;
 
 public class FilesFragment extends Fragment implements iOnDataFetched, OnRCVClickListener, View.OnClickListener {
@@ -92,7 +92,6 @@ public class FilesFragment extends Fragment implements iOnDataFetched, OnRCVClic
      * Function that gets all the databases names and tables of each db in other thread.
      */
     private void initData() {
-        Log.d("pttt", "FilesFragment - initData");
         files_BTN_back.setVisibility(View.GONE);
         File file = context.getFilesDir();
         files_LBL_hierarchy.setText(file.getName() + "/");
@@ -104,7 +103,7 @@ public class FilesFragment extends Fragment implements iOnDataFetched, OnRCVClic
      */
     private void initRecyclerView() {
         files_RCV.setHasFixedSize(true);
-        layoutManager = new GridLayoutManager(context, 3);
+        layoutManager = new GridLayoutManager(context, 2);
         files_RCV.setLayoutManager(layoutManager);
     }
 
@@ -115,6 +114,7 @@ public class FilesFragment extends Fragment implements iOnDataFetched, OnRCVClic
         if (files_RCV != null) {
             files_RCV.removeAllViewsInLayout();
         }
+        Collections.sort(filesData);
         filesAdapter = new FilesAdapter(filesData, this);
         files_RCV.setAdapter(filesAdapter);
         if (filesStack.size() > 1) {

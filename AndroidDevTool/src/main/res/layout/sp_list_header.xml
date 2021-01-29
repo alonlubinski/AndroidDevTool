@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:src="@drawable/ic_edit"
-        android:background="#00aa00"
+        android:background="@drawable/edit_button_shape"
         android:layout_gravity="center_vertical"/>
 
     <ImageButton
@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:src="@drawable/ic_delete"
-        android:background="#aa0000"
+        android:background="@drawable/delete_button_shape"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="10dp"/>
 

@@ -3,7 +3,6 @@ package com.alon.androiddevtool.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,7 +93,6 @@ public class DBExpandableListAdapter extends BaseExpandableListAdapter {
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("pttt", childTitle);
                 startDBTableActivity(dataSet.get(groupPosition).getName(), childTitle, dataSet.get(groupPosition).getVersion());
             }
         });

@@ -23,5 +23,10 @@
             android:title="@string/files_str"
             android:icon="@drawable/ic_folder"/>
 
+        <item
+            android:id="@+id/menu_exit"
+            android:title="@string/exit_str"
+            android:icon="@drawable/ic_exit"/>
+
     </group>
 </menu>

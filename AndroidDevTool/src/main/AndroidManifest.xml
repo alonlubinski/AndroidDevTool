@@ -3,11 +3,16 @@
     package="com.alon.androiddevtool">
 
     <application android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".DBTableActivity"></activity>
+        <activity
+            android:name=".DBTableActivity"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".EditFileActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".AndroidDevToolActivity">
+        <activity
+            android:name=".AndroidDevToolActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="AndroidDevTool" />
 

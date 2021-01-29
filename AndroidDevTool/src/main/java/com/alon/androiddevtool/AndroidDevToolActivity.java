@@ -10,7 +10,6 @@ import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
 
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -35,14 +34,13 @@ public class AndroidDevToolActivity extends AppCompatActivity implements Navigat
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_android_dev_tool);
-        Log.d("pttt", "onCreate");
 
         findAll();
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setupDrawerContent(navigationView);
         navigationView.setNavigationItemSelectedListener(this);
-        getSupportFragmentManager().beginTransaction().add(R.id.main_FL, new HomeFragment()).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.main_FL, new HomeFragment(getApplicationContext())).commit();
     }
 
 
@@ -83,24 +81,21 @@ public class AndroidDevToolActivity extends AppCompatActivity implements Navigat
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.menu_home) {
-            Log.d("pttt", "Home");
-            fragment = new HomeFragment();
+            fragment = new HomeFragment(getApplicationContext());
         } else if (item.getItemId() == R.id.menu_sp) {
             fragment = new SharedPreferencesFragment(getApplicationContext());
         } else if (item.getItemId() == R.id.menu_db) {
-            Log.d("pttt", "Database");
             fragment = new DatabaseFragment(getApplicationContext());
         } else if (item.getItemId() == R.id.menu_files) {
-            Log.d("pttt", "Files");
             fragment = new FilesFragment(getApplicationContext());
+        } else if (item.getItemId() == R.id.menu_exit) {
+            finish();
         }
         if (fragment != null) {
             changeFragment(fragment, item);
         }
         return false;
     }
-
-    // Method that change the layout to the chosen fragment.
 
     /**
      * Function that changes the layout to the chosen fragment.
@@ -120,18 +115,15 @@ public class AndroidDevToolActivity extends AppCompatActivity implements Navigat
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d("pttt", "AndroidDevToolActivity - onPause");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d("pttt", "AndroidDevToolActivity - onDestroy");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        Log.d("pttt", "AndroidDevToolActivity - onStop");
     }
 }

@@ -3,7 +3,6 @@ package com.alon.androiddevtool;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TableLayout;
@@ -27,7 +26,6 @@ public class DBTableActivity extends AppCompatActivity implements iOnDataFetched
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_d_b_table);
-        Log.d("pttt", "onCreate");
         findAll();
         table_PGB.setVisibility(View.GONE);
         taskRunner = new TaskRunner();
@@ -42,7 +40,6 @@ public class DBTableActivity extends AppCompatActivity implements iOnDataFetched
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d("pttt", "DBTableActivity - onResume");
     }
 
     /**
@@ -67,7 +64,6 @@ public class DBTableActivity extends AppCompatActivity implements iOnDataFetched
      */
     @Override
     public void showProgressBar() {
-        Log.d("pttt", "Loading");
         table_PGB.setVisibility(View.VISIBLE);
     }
 
@@ -76,7 +72,6 @@ public class DBTableActivity extends AppCompatActivity implements iOnDataFetched
      */
     @Override
     public void hideProgressBar() {
-        Log.d("pttt", "Finish Loading");
         table_PGB.setVisibility(View.GONE);
     }
 
@@ -87,7 +82,6 @@ public class DBTableActivity extends AppCompatActivity implements iOnDataFetched
      */
     @Override
     public void setDataInPageWithResult(Object result) {
-        Log.d("pttt", "Set Data");
         table_LYT.addView((TableLayout) result);
     }
 }
