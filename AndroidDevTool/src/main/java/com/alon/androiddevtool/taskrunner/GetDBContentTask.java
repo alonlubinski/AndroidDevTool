@@ -36,23 +36,25 @@ public class GetDBContentTask extends BaseTask {
             if (!list[i].endsWith("-journal")) {
                 tablesNames = new ArrayList<>();
                 version = getDBVersion(list[i]);
-                dbHelper = new DBHelper(context, list[i], version);
-                DBPojo dbPojo = new DBPojo();
-                dbPojo.setName(list[i]);
-                dbPojo.setVersion(version);
-                cursor = dbHelper.getTablesName();
-                if (cursor.moveToFirst()) {
-                    while (!cursor.isAfterLast()) {
-                        tableName = cursor.getString(cursor.getColumnIndex("name"));
-                        if (!tableName.equals("sqlite_sequence") && !tableName.equals("android_metadata")) {
-                            tablesNames.add(tableName);
+                if(version > 0) {
+                    dbHelper = new DBHelper(context, list[i], version);
+                    DBPojo dbPojo = new DBPojo();
+                    dbPojo.setName(list[i]);
+                    dbPojo.setVersion(version);
+                    cursor = dbHelper.getTablesName();
+                    if (cursor.moveToFirst()) {
+                        while (!cursor.isAfterLast()) {
+                            tableName = cursor.getString(cursor.getColumnIndex("name"));
+                            if (!tableName.equals("sqlite_sequence") && !tableName.equals("android_metadata")) {
+                                tablesNames.add(tableName);
+                            }
+                            cursor.moveToNext();
                         }
-                        cursor.moveToNext();
                     }
+                    dbPojo.setTables(tablesNames);
+                    dataSet.add(dbPojo);
+                    dbHelper.close();
                 }
-                dbPojo.setTables(tablesNames);
-                dataSet.add(dbPojo);
-                dbHelper.close();
             }
         }
         return dataSet;
