@@ -1,6 +1,6 @@
 # AndroidDevTool
 
-A library for easy debugging of the application's internal files, like: shared preferences files, SQLite databases and regular files.
+Android library for easy debugging of the application's internal files, like: shared preferences files, SQLite databases and regular files.
 
 ## Usage
 ```java                    
@@ -17,7 +17,7 @@ Clicking on one of the files will display this file's content.
 There are 2 buttons for each file - one for editing the file, the other for deleting it.
 <br>
 <img src = "assets/sp.JPG" height = 600>
-<img src = "assets/edit_sp.JPG" height = 600>
+<img src = "assets/sp_edit.JPG" height = 600>
 <br><br>
 ### Databases
 View the application's internal databases.
