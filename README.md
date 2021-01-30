@@ -19,7 +19,7 @@ Step 2. Add the dependency:
 
 ```
 dependencies {
-	implementation 'com.github.alonlubinski:AndroidDevTool:1.00.01'
+	implementation 'com.github.alonlubinski:AndroidDevTool:1.00.02'
 }
 ```
 
