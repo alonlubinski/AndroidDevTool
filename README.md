@@ -19,15 +19,20 @@ Step 2. Add the dependency:
 
 ```
 dependencies {
-	implementation 'com.github.alonlubinski:AndroidDevTool:1.00.01'
+	implementation 'com.github.alonlubinski:AndroidDevTool:1.00.02'
 }
 ```
 
 ## Usage
 ```java                    
 
-Intent intent = new Intent("AndroidDevTool");
+Intent intent = new Intent(getApplicationContext(), AndroidDevToolActivity.class);
 startActivity(intent);
+```
+
+Additionally, the theme field in the manifest file should not include an action bar. Please use something like that:
+```java
+android:theme="@style/Theme.AppCompat.Light.NoActionBar"
 ```
 
 
