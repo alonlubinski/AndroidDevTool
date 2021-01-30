@@ -2,14 +2,12 @@ package com.alon.androiddevtool.taskrunner;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.alon.androiddevtool.models.DBPojo;
 import com.alon.androiddevtool.utils.DBHelper;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 public class GetDBContentTask extends BaseTask {
@@ -33,10 +31,11 @@ public class GetDBContentTask extends BaseTask {
         String tableName;
         int version;
         for (int i = 0; i < list.length; i++) {
-            if (!list[i].endsWith("-journal")) {
+
+            if (!list[i].endsWith("-journal") && !list[i].endsWith("-shm") && !list[i].endsWith("-wal") && !list[i].endsWith(".corrupt")) {
                 tablesNames = new ArrayList<>();
                 version = getDBVersion(list[i]);
-                if(version > 0) {
+                if (version > 0) {
                     dbHelper = new DBHelper(context, list[i], version);
                     DBPojo dbPojo = new DBPojo();
                     dbPojo.setName(list[i]);
@@ -45,7 +44,7 @@ public class GetDBContentTask extends BaseTask {
                     if (cursor.moveToFirst()) {
                         while (!cursor.isAfterLast()) {
                             tableName = cursor.getString(cursor.getColumnIndex("name"));
-                            if (!tableName.equals("sqlite_sequence") && !tableName.equals("android_metadata")) {
+                            if (!tableName.equals("sqlite_sequence") && !tableName.equals("android_metadata") && !tableName.equals("room_master_table")) {
                                 tablesNames.add(tableName);
                             }
                             cursor.moveToNext();
@@ -79,13 +78,9 @@ public class GetDBContentTask extends BaseTask {
      * @throws IOException
      */
     private int getDBVersion(String fileName) throws IOException {
-        File file = new File(context.getApplicationInfo().dataDir + "/databases/" + fileName);
-        RandomAccessFile fp = new RandomAccessFile(file, "r");
-        fp.seek(60);
-        byte[] buff = new byte[4];
-        fp.read(buff, 0, 4);
-        return ByteBuffer.wrap(buff).getInt();
+        SQLiteDatabase db = SQLiteDatabase.openDatabase(context.getApplicationInfo().dataDir + "/databases/" + fileName, null, SQLiteDatabase.OPEN_READONLY);
+        int version = db.getVersion();
+        db.close();
+        return version;
     }
 }
-
-

@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.alon.androiddevtool.AndroidDevToolActivity;
+
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -18,7 +20,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         findAll();
         setClickListeners();
-
     }
 
     private void findAll() {
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void startDevActivity() {
-        Intent intent = new Intent("AndroidDevTool");
+        Intent intent = new Intent(getApplicationContext(), AndroidDevToolActivity.class);
         startActivity(intent);
     }
 }
